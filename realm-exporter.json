@@ -1,0 +1,85 @@
+{
+  "realm": "Toma",
+  "enabled": true,
+  "displayName": "Toma Dealership Realm",
+  "roles": {
+    "realm": [
+      { "name": "user" },
+      { "name": "warehouse_admin" },
+      { "name": "admin" },
+      { "name": "manager" }
+    ],
+    "client": {
+      "admin": [
+        {
+          "name": "client_user",
+          "composite": true,
+          "composites": { "realm": ["user"] }
+        },
+        {
+          "name": "client_admin",
+          "composite": true,
+          "composites": { "realm": ["admin"] }
+        }
+      ]
+    }
+  },
+  "clients": [
+    {
+      "clientId": "admin",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "bearerOnly": false,
+      "serviceAccountsEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "secret": "secret-key",
+      "redirectUris": ["*"],
+      "webOrigins": ["*"],
+      "fullScopeAllowed": true,
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "user.attribute": "foo",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "toma",
+      "enabled": true,
+      "email": "toma@example.com",
+      "realmRoles": ["admin"],
+      "credentials": [{ "type": "password", "value": "toma", "temporary": false }]
+    },
+    {
+      "username": "warehouse_guy",
+      "enabled": true,
+      "realmRoles": ["warehouse_admin"],
+      "credentials": [{ "type": "password", "value": "pass", "temporary": false }]
+    },
+    {
+      "username": "manager_bob",
+      "enabled": true,
+      "realmRoles": ["manager"],
+      "credentials": [{ "type": "password", "value": "pass", "temporary": false }]
+    },
+    {
+      "username": "ionut",
+      "enabled": true,
+      "realmRoles": ["user"],
+      "credentials": [{ "type": "password", "value": "ionut", "temporary": false }]
+    }
+  ]
+}

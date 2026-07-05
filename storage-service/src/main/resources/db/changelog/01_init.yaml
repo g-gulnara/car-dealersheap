@@ -1,0 +1,202 @@
+# 01_init.yaml
+databaseChangeLog:
+  - changeSet:
+      id: 20260318-1
+      author: student
+      changes:
+        - createTable:
+            tableName: car_models
+            columns:
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: price_value, type: INTEGER }
+              - column: { name: price_currency, type: VARCHAR(3) }
+              - column: { name: engine_capacity, type: INTEGER }
+              - column: { name: transmission_type, type: VARCHAR(50) }
+              - column: { name: drive_train, type: VARCHAR(50) }
+              - column: { name: brand, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: car_body, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: model_name, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: fuel_type, type: VARCHAR(50) }
+              - column: { name: engine_power, type: INTEGER }
+              - column: { name: created_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: updated_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: removed, type: BOOLEAN, defaultValueBoolean: false }
+
+  - changeSet:
+      id: 20260312-2
+      author: student
+      changes:
+        - createTable:
+            tableName: car_components
+            columns:
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: name, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: price_value, type: INTEGER }
+              - column: { name: created_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: updated_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: removed, type: BOOLEAN, defaultValueBoolean: false }
+
+  - changeSet:
+      id: 20260318-3
+      author: student
+      changes:
+        - createTable:
+            tableName: cars_in_stock
+            columns:
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_car_model
+                    referencedTableName: car_models
+                    referencedColumnNames: id
+              - column: { name: is_reserved, type: BOOLEAN, defaultValueBoolean: false }
+              - column: { name: price_value, type: INTEGER }
+              - column: { name: price_currency, type: VARCHAR(3) }
+              - column: { name: created_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: updated_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: removed, type: BOOLEAN, defaultValueBoolean: false }
+
+  - changeSet:
+      id: 20260312-4
+      author: student
+      changes:
+        - createTable:
+            tableName: car_to_components
+            columns:
+              - column:
+                  name: car_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_car_link
+                    referencedTableName: cars_in_stock
+                    referencedColumnNames: id
+              - column:
+                  name: component_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_component_link
+                    referencedTableName: car_components
+                    referencedColumnNames: id
+        - addPrimaryKey:
+            columnNames: car_id, component_id
+            tableName: car_to_components
+
+  - changeSet:
+      id: 20260319-5
+      author: student
+      changes:
+        - createTable:
+            tableName: car_component_compatible_models
+            columns:
+              - column:
+                  name: component_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_comp_model_comp
+                    referencedTableName: car_components
+                    referencedColumnNames: id
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_comp_model_model
+                    referencedTableName: car_models
+                    referencedColumnNames: id
+
+  - changeSet:
+      id: 20260319-configured
+      author: student
+      changes:
+        - createTable:
+            tableName: configured_cars
+            columns:
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_configured_car_model
+                    referencedTableName: car_models
+                    referencedColumnNames: id
+              - column: { name: price_value, type: INTEGER }
+              - column:
+                  name: wheels_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_configured_car_wheels
+                    referencedTableName: car_components
+                    referencedColumnNames: id
+              - column:
+                  name: transmission_component_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_configured_car_transmission
+                    referencedTableName: car_components
+                    referencedColumnNames: id
+              - column:
+                  name: steering_wheel_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_configured_car_steering
+                    referencedTableName: car_components
+                    referencedColumnNames: id
+              - column:
+                  name: interior_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_configured_car_interior
+                    referencedTableName: car_components
+                    referencedColumnNames: id
+              - column: { name: created_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: updated_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: removed, type: BOOLEAN, defaultValueBoolean: false }
+
+  - changeSet:
+      id: 20260420-stock-components
+      author: student
+      changes:
+        - createTable:
+            tableName: stock_components
+            columns:
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: component_id, type: UUID, constraints: { nullable: false } }
+              - column: { name: quantity, type: INTEGER, constraints: { nullable: false } }
+              - column: { name: reserved, type: BOOLEAN, defaultValueBoolean: false }
+              - column: { name: created_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: updated_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: removed, type: BOOLEAN, defaultValueBoolean: false }
+  - changeSet:
+      id: 20260420-assembly-orders
+      author: student
+      changes:
+        - createTable:
+            tableName: assembly_orders
+            columns:
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: source_order_id, type: UUID, constraints: { nullable: false } }
+              - column: { name: source_order_type, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: car_id, type: UUID }
+              - column: { name: warehouse_admin_id, type: VARCHAR(255) }
+              - column: { name: status, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: created_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: updated_at, type: TIMESTAMP WITH TIME ZONE }
+              - column: { name: removed, type: BOOLEAN, defaultValueBoolean: false }
+
+  - changeSet:
+      id: 20260420-add-car-id-to-stock
+      author: student
+      changes:
+        - addColumn:
+            tableName: stock_components
+            columns:
+              - column:
+                  name: car_model_id
+                  type: UUID

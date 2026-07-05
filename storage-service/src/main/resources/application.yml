@@ -1,0 +1,61 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres-order:5432/storage_db
+    username: user
+    password: user
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/Toma/protocol/openid-connect/certs
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9094}
+    consumer:
+      group-id: storage-group
+      auto-offset-reset: earliest
+    producer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      missing-topics-fatal: false
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/master.yaml
+
+  application:
+    name: storage-service
+
+server:
+  port: 8081
+
+grpc:
+  server:
+    port: 9090
+    address: 0.0.0.0
+
+keycloak:
+  realm: Toma
+  auth-server-url: http://keycloak:8080
+  client-id: admin
+  client-secret: secret-key
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+environment:
+  - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
+  - OTEL_SERVICE_NAME=storage-service
+  - OTEL_TRACES_EXPORTER=otlp

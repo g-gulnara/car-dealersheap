@@ -1,0 +1,24 @@
+databaseChangeLog:
+        - changeSet:
+                  id: 20260417-1-drop-constraints
+                  author: student
+                  changes:
+                          - dropForeignKeyConstraint:
+                                    baseTableName: orders_in_stock
+                                    constraintName: fk_order_stock_client
+                          - dropForeignKeyConstraint:
+                                    baseTableName: orders_in_stock
+                                    constraintName: fk_order_stock_manager
+                          - dropForeignKeyConstraint:
+                                    baseTableName: personal_orders
+                                    constraintName: fk_personal_order_client
+                          - dropForeignKeyConstraint: { baseTableName: personal_orders, constraintName: fk_personal_order_manager }
+                          - dropForeignKeyConstraint: { baseTableName: test_drive_requests, constraintName: fk_test_drive_client }
+                          - dropForeignKeyConstraint: { baseTableName: user_roles, constraintName: fk_user_roles_user }
+
+        - changeSet:
+                  id: 20260417-2-drop-users
+                  author: student
+                  changes:
+                          - dropTable: { tableName: user_roles }
+                          - dropTable: { tableName: users }

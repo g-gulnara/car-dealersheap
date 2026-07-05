@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/01_init.yaml
+  - include:
+      file: db/changelog/02_seed.yaml
+
+  - include:
+      file: db/changelog/04_outbox.yaml

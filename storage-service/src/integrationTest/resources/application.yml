@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url:
+    username: user
+    password: user
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/Toma
+
+  kafka:
+    bootstrap-servers:
+    consumer:
+      group-id: storage-group-test
+      auto-offset-reset: earliest
+    listener:
+      missing-topics-fatal: false
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/master.yaml
+
+grpc:
+  server:
+    port: 9090
+  client:
+    local-test:
+      address: static://localhost:9090
+      negotiation-type: plaintext
+
+server:
+  port: 0
